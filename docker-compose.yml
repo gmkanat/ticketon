@@ -1,0 +1,36 @@
+version: '3.7'
+
+services:
+  postgres:
+    image: postgres:13-alpine
+    environment:
+      POSTGRES_PASSWORD: postgres
+      TZ: 'Asia/Almaty'
+    ports:
+      - "5444:5432"
+    networks:
+      - yandex_net
+
+  app:
+    build: .
+    command: bash -c "python manage.py makemigrations --merge --noinput &&
+                      python manage.py migrate --noinput && 
+                      python manage.py runserver 0.0.0.0:80"
+    depends_on:
+      - postgres
+    environment:
+      DATABASE_NAME: ticketon
+      DATABASE_USER: postgres
+      DATABASE_PASSWORD: postgres
+      DATABASE_HOST: postgres
+      DATABASE_PORT: 5432
+    ports:
+      - 80:80
+    volumes:
+      - .:/project
+    networks:
+      - yandex_net
+
+networks:
+  yandex_net:
+    driver: bridge
