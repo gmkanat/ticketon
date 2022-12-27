@@ -5,7 +5,7 @@ from mixins.models import (
     TimeStampMixin,
     IsActiveMixin,
 )
-from api.models import Ticket
+from api.models import Ticket, User
 
 
 class Comment(TimeStampMixin, IsActiveMixin):
@@ -17,7 +17,15 @@ class Comment(TimeStampMixin, IsActiveMixin):
         Ticket,
         on_delete=models.CASCADE,
         related_name='comments',
-        verbose_name=_('Comments')
+        verbose_name=_('Ticket')
+    )
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='comments',
+        verbose_name=_('User'),
+        blank=True,
+        null=True,
     )
 
     class Meta:

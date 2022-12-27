@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from api.models import Purchase, Comment
+from api.models import Purchase, Comment, User
 from api.serializers import TicketListSerializer
 from utils import messages
 
@@ -49,11 +49,36 @@ class PurchaseListSerializer(serializers.ModelSerializer):
         return purchase
 
 
+class UserSerializer(serializers.ModelSerializer):
+    model = User
+    fields = (
+        'id',
+        'first_name',
+        'last_name',
+        'email',
+    )
+
+
 class CommentSerializer(serializers.ModelSerializer):
+    user_name = serializers.CharField(
+        source='user.first_name',
+        allow_null=True,
+        read_only=True,
+    )
+
     class Meta:
         model = Comment
         fields = (
             'id',
             'message',
             'ticket',
+            'user_name',
         )
+
+    def create(self, validated_data):
+        comment = Comment.objects.create(
+            message=validated_data.get('message'),
+            ticket=validated_data.get('ticket'),
+            user=self.context['request'].user,
+        )
+        return comment
