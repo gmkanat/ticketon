@@ -3,3 +3,4 @@ from .ticket import *
 from .purchase import *
 from .comment import *
 from .city import *
+from .category import *
