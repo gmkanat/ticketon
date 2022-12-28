@@ -1,7 +1,7 @@
 from rest_framework import viewsets
 from rest_framework.permissions import AllowAny
-from api.models import Category
-from api.serializers import CategorySerializer
+from api.models import City
+from api.serializers import CitySerializer
 from django_filters.rest_framework import DjangoFilterBackend
 
 
@@ -19,8 +19,8 @@ class CityViewSet(
         return super().get_permissions()
 
     def get_queryset(self):
-        return Category.objects.filter(is_active=True)
+        return City.objects.filter(is_active=True)
 
     def get_serializer_class(self):
-        return CategorySerializer
+        return CitySerializer
 
